@@ -1,0 +1,1567 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Lumba-Lumba: 10 Perintah Allah (Agama Katolik)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tone.js for Sound Effects -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap');
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: #001220;
+            user-select: none;
+            overflow-x: hidden;
+        }
+
+        .font-fredoka {
+            font-family: 'Fredoka', cursive;
+        }
+
+        /* Glassmorphism effects */
+        .glass-panel {
+            background: rgba(10, 37, 64, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #021a2e;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #0284c7;
+            border-radius: 4px;
+        }
+
+        /* Glowing text & border effects */
+        .glow-gold {
+            text-shadow: 0 0 12px rgba(250, 204, 21, 0.7);
+        }
+        .border-glow-gold {
+            box-shadow: 0 0 15px rgba(250, 204, 21, 0.5);
+        }
+
+        /* Pulsing animations */
+        @keyframes pulse-subtle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+        }
+        .animate-pulse-subtle {
+            animation: pulse-subtle 2s infinite ease-in-out;
+        }
+
+        /* Modal transitions */
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.9) translateY(20px);
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Printable Certificate Styles */
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-certificate, #printable-certificate * {
+                visibility: visible;
+            }
+            #printable-certificate {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background: white !important;
+                color: black !important;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen flex flex-col justify-between">
+
+    <!-- TOP HEADER / HUD NAVIGATION -->
+    <header class="w-full glass-panel sticky top-0 z-30 px-4 py-2 border-b border-cyan-500/30">
+        <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2">
+            <!-- Game Title & Catholic RE Badge -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-cyan-600 border-2 border-amber-300 flex items-center justify-center text-amber-300 shadow-lg">
+                    <i class="fa-solid font-bold fa-cross text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="font-fredoka text-lg md:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 via-amber-200 to-yellow-400">
+                        10 Perintah Allah
+                    </h1>
+                    <p class="text-xs text-cyan-200">Pelajaran Agama Katolik - Petualangan Laut</p>
+                </div>
+            </div>
+
+            <!-- Hearts, Score, & Progress -->
+            <div class="flex items-center gap-4 bg-slate-900/60 px-4 py-1.5 rounded-full border border-cyan-500/30">
+                <!-- Hearts -->
+                <div class="flex items-center gap-1" id="hearts-container">
+                    <i class="fa-solid fa-heart text-red-500 text-lg"></i>
+                    <i class="fa-solid fa-heart text-red-500 text-lg"></i>
+                    <i class="fa-solid fa-heart text-red-500 text-lg"></i>
+                </div>
+
+                <div class="h-4 w-px bg-slate-700"></div>
+
+                <!-- Score -->
+                <div class="flex items-center gap-1.5 font-fredoka text-amber-300">
+                    <i class="fa-solid fa-star text-yellow-400"></i>
+                    <span id="score-val" class="text-base">0</span>
+                </div>
+
+                <div class="h-4 w-px bg-slate-700"></div>
+
+                <!-- Progress Badge -->
+                <div class="flex items-center gap-1.5 text-cyan-300 text-sm font-semibold">
+                    <i class="fa-solid fa-scroll text-amber-400"></i>
+                    <span id="commandment-count">0/10</span>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex items-center gap-2">
+                <button id="btn-journal" onclick="toggleJournal()" class="bg-cyan-700/80 hover:bg-cyan-600 text-cyan-100 text-xs md:text-sm px-3 py-1.5 rounded-lg border border-cyan-400/40 flex items-center gap-1.5 transition">
+                    <i class="fa-solid fa-book-open text-amber-300"></i>
+                    <span>Rangkuman</span>
+                </button>
+                <button id="btn-audio" onclick="toggleAudio()" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 p-2 rounded-lg border border-slate-600 transition">
+                    <i id="audio-icon" class="fa-solid fa-volume-high"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 10 Commandment Progress Bar Indicators -->
+        <div class="max-w-6xl mx-auto mt-2 pt-1 border-t border-cyan-900/40 flex justify-between gap-1 overflow-x-auto pb-1">
+            <div id="badge-1" class="cmd-badge flex-1 min-w-[28px] text-center py-0.5 rounded bg-slate-800/80 text-slate-500 text-xs font-bold border border-slate-700">I</div>
+            <div id="badge-2" class="cmd-badge flex-1 min-w-[28px] text-center py-0.5 rounded bg-slate-800/80 text-slate-500 text-xs font-bold border border-slate-700">II</div>
+            <div id="badge-3" class="cmd-badge flex-1 min-w-[28px] text-center py-0.5 rounded bg-slate-800/80 text-slate-500 text-xs font-bold border border-slate-700">III</div>
+            <div id="badge-4" class="cmd-badge flex-1 min-w-[28px] text-center py-0.5 rounded bg-slate-800/80 text-slate-500 text-xs font-bold border border-slate-700">IV</div>
+            <div id="badge-5" class="cmd-badge flex-1 min-w-[28px] text-center py-0.5 rounded bg-slate-800/80 text-slate-500 text-xs font-bold border border-slate-700">V</div>
+            <div id="badge-6" class="cmd-badge flex-1 min-w-[28px] text-center py-0.5 rounded bg-slate-800/80 text-slate-500 text-xs font-bold border border-slate-700">VI</div>
+            <div id="badge-7" class="cmd-badge flex-1 min-w-[28px] text-center py-0.5 rounded bg-slate-800/80 text-slate-500 text-xs font-bold border border-slate-700">VII</div>
+            <div id="badge-8" class="cmd-badge flex-1 min-w-[28px] text-center py-0.5 rounded bg-slate-800/80 text-slate-500 text-xs font-bold border border-slate-700">VIII</div>
+            <div id="badge-9" class="cmd-badge flex-1 min-w-[28px] text-center py-0.5 rounded bg-slate-800/80 text-slate-500 text-xs font-bold border border-slate-700">IX</div>
+            <div id="badge-10" class="cmd-badge flex-1 min-w-[28px] text-center py-0.5 rounded bg-slate-800/80 text-slate-500 text-xs font-bold border border-slate-700">X</div>
+        </div>
+    </header>
+
+    <!-- MAIN GAME AREA -->
+    <main class="relative flex-1 max-w-6xl w-full mx-auto p-2 sm:p-4 flex flex-col justify-center items-center">
+        <!-- Game Canvas Box -->
+        <div class="relative w-full aspect-[16/9] max-h-[70vh] rounded-2xl overflow-hidden shadow-2xl border-2 border-cyan-500/40 bg-gradient-to-b from-cyan-900 via-blue-950 to-slate-950 flex justify-center items-center">
+            
+            <!-- Underwater Canvas -->
+            <canvas id="gameCanvas" class="w-full h-full block cursor-pointer"></canvas>
+
+            <!-- Target Banner Overlay (Current Quest) -->
+            <div id="quest-banner" class="absolute top-3 left-1/2 -translate-x-1/2 glass-panel px-4 py-1.5 rounded-full border border-amber-400/40 text-xs md:text-sm text-center font-semibold text-amber-200 flex items-center gap-2 shadow-lg pointer-events-none transition-all">
+                <i class="fa-solid fa-compass text-yellow-400 animate-spin" style="animation-duration: 8s;"></i>
+                <span id="quest-text">Bantu Lumba-Lumba menemukan <b>Loh Batu Perintah ke-1</b>!</span>
+            </div>
+
+            <!-- Mobile Touch Controls overlay -->
+            <div id="mobile-controls" class="absolute bottom-3 left-3 right-3 flex justify-between items-end pointer-events-none md:hidden z-10">
+                <!-- D-Pad Controls -->
+                <div class="grid grid-cols-3 gap-1 w-32 h-32 pointer-events-auto bg-slate-900/60 p-2 rounded-2xl border border-cyan-500/30 backdrop-blur-md">
+                    <div></div>
+                    <button id="btn-up" class="bg-cyan-600/60 active:bg-cyan-500 text-white rounded-lg flex items-center justify-center text-xl"><i class="fa-solid fa-caret-up"></i></button>
+                    <div></div>
+                    <button id="btn-left" class="bg-cyan-600/60 active:bg-cyan-500 text-white rounded-lg flex items-center justify-center text-xl"><i class="fa-solid fa-caret-left"></i></button>
+                    <div class="flex items-center justify-center text-cyan-400 text-xs"><i class="fa-solid fa-water"></i></div>
+                    <button id="btn-right" class="bg-cyan-600/60 active:bg-cyan-500 text-white rounded-lg flex items-center justify-center text-xl"><i class="fa-solid fa-caret-right"></i></button>
+                    <div></div>
+                    <button id="btn-down" class="bg-cyan-600/60 active:bg-cyan-500 text-white rounded-lg flex items-center justify-center text-xl"><i class="fa-solid fa-caret-down"></i></button>
+                    <div></div>
+                </div>
+
+                <!-- Swim Speed Boost Button -->
+                <button id="btn-dash" class="pointer-events-auto bg-gradient-to-r from-amber-500 to-yellow-500 active:from-amber-600 text-slate-950 font-bold px-4 py-3 rounded-2xl shadow-lg border border-amber-300 flex items-center gap-2 text-sm">
+                    <i class="fa-solid fa-bolt text-lg"></i> RENANG CEPAT
+                </button>
+            </div>
+
+            <!-- START SCREEN OVERLAY -->
+            <div id="start-overlay" class="absolute inset-0 bg-slate-950/85 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center z-20">
+                <div class="w-20 h-20 bg-cyan-600/30 rounded-full border-2 border-cyan-400 flex items-center justify-center mb-3 animate-pulse-subtle">
+                    <i class="fa-solid fa-fish-fins text-4xl text-cyan-300"></i>
+                </div>
+                <h2 class="font-fredoka text-3xl md:text-4xl text-amber-300 mb-2 font-bold glow-gold">
+                    Petualangan Lumba-Lumba
+                </h2>
+                <p class="text-cyan-100 max-w-md text-sm md:text-base mb-6 leading-relaxed">
+                    Bantu si Lumba-Lumba menjelajahi samudera untuk menemukan <span class="text-amber-300 font-bold">10 Perintah Allah</span> (versi Agama Katolik) yang tersembunyi di Loh Batu Emas!
+                </p>
+                <button onclick="startGame()" class="bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-slate-950 font-fredoka font-bold text-lg md:text-xl px-8 py-3.5 rounded-full shadow-lg hover:shadow-yellow-500/30 border-2 border-yellow-200 transition transform active:scale-95 flex items-center gap-3">
+                    <i class="fa-solid fa-play"></i> Mulai Petualangan
+                </button>
+                <div class="mt-6 text-xs text-cyan-300/70 flex items-center gap-4">
+                    <span><i class="fa-solid fa-keyboard mr-1"></i> Panah / WASD untuk Berenang</span>
+                    <span><i class="fa-solid fa-hand-pointer mr-1"></i> Klik/Sentuh Layar</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- COMMANDMENT POPUP MODAL (Learnings & Quiz) -->
+    <div id="modal-cmd" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden transition-opacity">
+        <div id="modal-cmd-card" class="glass-panel w-full max-w-xl rounded-3xl border-2 border-amber-400/80 p-6 md:p-8 text-white shadow-2xl relative overflow-hidden">
+            <!-- Background Golden Rays Effect -->
+            <div class="absolute -top-24 -left-24 w-48 h-48 bg-amber-500/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="flex items-center justify-between border-b border-cyan-500/30 pb-3 mb-4">
+                <div class="flex items-center gap-2">
+                    <span id="modal-cmd-number-badge" class="bg-amber-400 text-slate-950 font-fredoka font-bold px-3 py-1 rounded-lg text-sm shadow">
+                        Perintah Ke-1
+                    </span>
+                    <span class="text-xs text-cyan-300"><i class="fa-solid fa-book-bible mr-1"></i>Keluaran 20:1-17</span>
+                </div>
+                <div class="text-yellow-400 text-xl"><i class="fa-solid fa-kaaba"></i></div>
+            </div>
+
+            <!-- Commandment Title Text -->
+            <div class="mb-4 text-center">
+                <h3 id="modal-cmd-text" class="font-fredoka text-xl md:text-2xl text-amber-300 font-bold leading-tight mb-2">
+                    "Akulah Tuhan, Allahmu: Jangan ada padamu allah lain di hadapan-Ku."
+                </h3>
+            </div>
+
+            <!-- Category & Catholic Explanation -->
+            <div class="bg-cyan-950/60 p-4 rounded-2xl border border-cyan-500/30 mb-5 text-xs md:text-sm text-cyan-100 leading-relaxed">
+                <p id="modal-cmd-desc" class="mb-2">
+                    <b>Makna:</b> Menolak berhala modern seperti mendewakan kekayaan, uang, atau kepopuleran. Mengakui Allah sebagai satu-satunya Sang Pencipta dan Penyelamat.
+                </p>
+                <div class="text-amber-200/90 italic flex items-center gap-1.5 text-xs">
+                    <i class="fa-solid fa-lightbulb text-yellow-400"></i>
+                    <span id="modal-cmd-reflection">Refleksi: Apakah kita mengutamakan Tuhan dalam doa setiap hari?</span>
+                </div>
+            </div>
+
+            <!-- Mini Quiz Section -->
+            <div class="bg-slate-900/80 p-4 rounded-2xl border border-amber-500/30">
+                <p class="font-bold text-amber-300 text-xs md:text-sm mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-question"></i> Pertanyaan Refleksi Katolik:
+                </p>
+                <p id="modal-quiz-q" class="text-xs md:text-sm mb-3 text-cyan-100">
+                    Sikap manakah yang mencerminkan pelaksanaan Perintah Pertama di kehidupan sehari-hari?
+                </p>
+                
+                <div id="quiz-options-container" class="space-y-2">
+                    <!-- Option Buttons dynamically generated -->
+                </div>
+            </div>
+
+            <!-- Feedback Message -->
+            <div id="quiz-feedback" class="mt-3 text-center text-sm font-bold h-6 transition-all"></div>
+
+            <!-- Continue Action Button -->
+            <div class="mt-4 text-right">
+                <button id="btn-continue-cmd" disabled onclick="closeCmdModal()" class="opacity-50 cursor-not-allowed bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-fredoka px-6 py-2.5 rounded-full text-sm font-bold shadow-lg transition">
+                    Lanjutkan Petualangan <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- COMPENDIUM / RANGKUMAN JOURNAL MODAL -->
+    <div id="modal-journal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+        <div class="glass-panel w-full max-w-3xl max-h-[85vh] rounded-3xl border border-cyan-400/50 p-6 text-white shadow-2xl flex flex-col">
+            <div class="flex items-center justify-between border-b border-cyan-500/30 pb-3 mb-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center font-bold">
+                        <i class="fa-solid fa-book-bible text-xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-fredoka text-xl font-bold text-amber-300">Daftar 10 Perintah Allah</h3>
+                        <p class="text-xs text-cyan-200">Rumusan Katekismus Gereja Katolik (Puji Syukur)</p>
+                    </div>
+                </div>
+                <button onclick="toggleJournal()" class="text-slate-400 hover:text-white text-xl p-1"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <!-- Scrollable list of 10 Commandments -->
+            <div id="journal-list" class="flex-1 overflow-y-auto pr-2 space-y-3">
+                <!-- Items inserted dynamically -->
+            </div>
+
+            <div class="mt-4 pt-3 border-t border-cyan-500/30 text-right">
+                <button onclick="toggleJournal()" class="bg-cyan-700 hover:bg-cyan-600 text-white font-bold px-5 py-2 rounded-xl text-sm">
+                    Tutup Rangkuman
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VICTORY MODAL -->
+    <div id="modal-victory" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+        <div class="glass-panel w-full max-w-lg rounded-3xl border-2 border-amber-400 p-8 text-center text-white shadow-2xl">
+            <div class="w-24 h-24 bg-gradient-to-tr from-amber-400 to-yellow-300 rounded-full text-slate-950 flex items-center justify-center mx-auto mb-4 border-4 border-yellow-200 shadow-xl animate-bounce">
+                <i class="fa-solid fa-trophy text-5xl"></i>
+            </div>
+            <h2 class="font-fredoka text-3xl font-bold text-amber-300 mb-1 glow-gold">Selamat! Proficiat!</h2>
+            <p class="text-cyan-200 text-sm mb-4">
+                Kamu telah berhasil membantu Lumba-Lumba menemukan <br><b class="text-amber-300">Seluruh 10 Perintah Allah</b>!
+            </p>
+
+            <div class="bg-slate-900/80 p-4 rounded-2xl border border-amber-400/30 mb-6 text-center">
+                <p class="text-xs text-cyan-300 mb-1">Skor Akhir Kamu:</p>
+                <div class="text-3xl font-fredoka text-yellow-400 font-bold" id="victory-score">1000</div>
+                <p class="text-xs text-cyan-200/80 mt-2">"Kasihilah Tuhan, Allahmu, dengan segenap hatimu dan kasihilah sesamamu manusia seperti dirimu sendiri."</p>
+                
+                <!-- Student Name Input for Certificate -->
+                <div class="mt-4 pt-3 border-t border-slate-800 text-left">
+                    <label class="block text-xs text-amber-300 font-bold mb-1">Nama Lengkap untuk Sertifikat:</label>
+                    <input type="text" id="student-name-input" placeholder="Masukkan Nama Lengkap Kamu..." class="w-full px-3 py-2 bg-slate-950 border border-amber-400/50 rounded-xl text-sm text-amber-200 focus:outline-none focus:border-amber-300">
+                </div>
+            </div>
+
+            <div class="flex flex-wrap gap-2 justify-center">
+                <button onclick="generateCertificate()" class="bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-slate-950 font-fredoka font-bold px-5 py-2.5 rounded-xl text-sm shadow-lg flex items-center gap-2">
+                    <i class="fa-solid fa-certificate text-lg"></i> Lihat Sertifikat Kelulusan
+                </button>
+                <button onclick="toggleJournal()" class="bg-cyan-800 hover:bg-cyan-700 text-white font-bold px-4 py-2.5 rounded-xl text-sm border border-cyan-400/40">
+                    <i class="fa-solid fa-book-open mr-1"></i> Perintah
+                </button>
+                <button onclick="restartGame()" class="bg-slate-800 hover:bg-slate-700 text-cyan-200 font-bold px-4 py-2.5 rounded-xl text-sm border border-slate-600">
+                    <i class="fa-solid fa-rotate-right mr-1"></i> Main Lagi
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CERTIFICATE MODAL -->
+    <div id="modal-certificate" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden overflow-y-auto">
+        <div class="relative w-full max-w-2xl my-auto">
+            <!-- Certificate Render Box -->
+            <div id="printable-certificate" class="bg-amber-50 border-8 border-double border-amber-700 p-6 md:p-10 rounded-2xl text-slate-900 shadow-2xl relative overflow-hidden font-serif">
+                <!-- Background Watermark Cross -->
+                <div class="absolute inset-0 flex items-center justify-center opacity-5 pointer-events-none">
+                    <i class="fa-solid fa-cross text-[250px] text-amber-900"></i>
+                </div>
+
+                <!-- Decorative Corners -->
+                <div class="absolute top-2 left-2 text-amber-700 text-xl"><i class="fa-solid fa-crown"></i></div>
+                <div class="absolute top-2 right-2 text-amber-700 text-xl"><i class="fa-solid fa-crown"></i></div>
+                <div class="absolute bottom-2 left-2 text-amber-700 text-xl"><i class="fa-solid fa-crown"></i></div>
+                <div class="absolute bottom-2 right-2 text-amber-700 text-xl"><i class="fa-solid fa-crown"></i></div>
+
+                <!-- Certificate Header -->
+                <div class="text-center border-b-2 border-amber-800/40 pb-4 mb-6">
+                    <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-amber-800 text-amber-100 mb-2">
+                        <i class="fa-solid fa-cross text-2xl"></i>
+                    </div>
+                    <p class="text-xs uppercase tracking-widest font-sans font-bold text-amber-800">Pendidikan Agama Katolik & Budi Pekerti</p>
+                    <h2 class="text-2xl md:text-3xl font-bold font-fredoka text-amber-950 mt-1">SERTIFIKAT KELULUSAN</h2>
+                    <p class="text-xs text-amber-800 italic mt-0.5">Petualangan 10 Perintah Allah</p>
+                </div>
+
+                <!-- Certificate Body -->
+                <div class="text-center my-6 space-y-3">
+                    <p class="text-xs md:text-sm text-slate-700 font-sans">Dengan bangga diberikan kepada:</p>
+                    <h3 id="cert-student-name" class="text-2xl md:text-3xl font-bold text-amber-900 font-fredoka border-b border-amber-400 inline-block px-8 py-1">
+                        Santo / Santa
+                    </h3>
+                    <p class="text-xs md:text-sm text-slate-700 font-sans max-w-md mx-auto leading-relaxed mt-2">
+                        Telah berhasil menyelesaikan tantangan petualangan bawah laut dan menguasai pemahaman <b class="text-amber-900">10 Perintah Allah</b> (Katekismus Gereja Katolik) dengan hasil:
+                    </p>
+
+                    <!-- Score & Grade Badge -->
+                    <div class="inline-flex items-center gap-6 bg-amber-100/80 px-6 py-2.5 rounded-xl border border-amber-300 my-2">
+                        <div>
+                            <span class="block text-[10px] uppercase tracking-wider text-amber-800 font-sans font-bold">Skor Perolehan</span>
+                            <span id="cert-score-val" class="text-xl font-bold text-amber-950 font-fredoka">1000</span>
+                        </div>
+                        <div class="h-8 w-px bg-amber-300"></div>
+                        <div>
+                            <span class="block text-[10px] uppercase tracking-wider text-amber-800 font-sans font-bold">Predikat</span>
+                            <span id="cert-grade-val" class="text-xl font-bold text-amber-900 font-fredoka">Sangat Memuaskan (A)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Signatures & Date -->
+                <div class="mt-8 pt-4 border-t border-amber-800/30 flex justify-between items-end text-xs font-sans text-slate-700">
+                    <div class="text-left">
+                        <p class="text-[10px] text-slate-500">Diterbitkan pada:</p>
+                        <p id="cert-date" class="font-bold text-amber-900">25 September 2026</p>
+                    </div>
+                    <div class="text-center">
+                        <div class="w-12 h-12 mx-auto mb-1 border-2 border-amber-700/40 rounded-full flex items-center justify-center text-amber-800">
+                            <i class="fa-solid fa-award text-2xl"></i>
+                        </div>
+                        <p class="font-bold text-amber-950">Tim Pembelajaran Katolik</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Action Buttons (No Print) -->
+            <div class="mt-4 flex gap-3 justify-center no-print">
+                <button onclick="window.print()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-5 py-2 rounded-xl text-sm shadow-lg flex items-center gap-2">
+                    <i class="fa-solid fa-print"></i> Cetak / Simpan PDF
+                </button>
+                <button onclick="closeCertificate()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-5 py-2 rounded-xl text-sm border border-slate-600">
+                    Tutup
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GAME OVER MODAL -->
+    <div id="modal-gameover" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
+        <div class="glass-panel w-full max-w-md rounded-3xl border border-red-500/40 p-6 text-center text-white shadow-2xl">
+            <div class="w-16 h-16 bg-red-900/50 rounded-full text-red-400 flex items-center justify-center mx-auto mb-3 border border-red-500">
+                <i class="fa-solid fa-heart-crack text-3xl"></i>
+            </div>
+            <h3 class="font-fredoka text-2xl font-bold text-red-400 mb-2">Energi Lumba-Lumba Habis!</h3>
+            <p class="text-xs md:text-sm text-cyan-200 mb-5">
+                Jangan menyerah! Hindari ubur-ubur dan sampah laut, serta kumpulkan mutiara laut untuk memulihkan energi.
+            </p>
+            <button onclick="restartGame()" class="bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-fredoka font-bold px-6 py-2.5 rounded-full text-sm shadow-lg border border-cyan-300">
+                <i class="fa-solid fa-rotate-right mr-1"></i> Coba Lagi
+            </button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="w-full text-center py-2 text-xs text-cyan-400/60 border-t border-cyan-900/40 bg-slate-950">
+        Media Pembelajaran Edukatif Agama Katolik - Sepuluh Perintah Allah &copy; 2026
+    </footer>
+
+    <script>
+        /* CATHOLIC 10 COMMANDMENTS DATA (Puji Syukur / Katekismus Gereja Katolik) */
+        const CATHOLIC_COMMANDMENTS = [
+            {
+                id: 1,
+                roman: "I",
+                title: "Akulah Tuhan, Allahmu: Jangan ada padamu allah lain di hadapan-Ku.",
+                desc: "Perintah pertama mengajarkan kita untuk menyembah hanya satu-satunya Tuhan Yang Maha Esa. Kita diajak menjauhi 'berhala modern' seperti mendewakan uang, gadget, atau ketenaran melebihi Tuhan.",
+                reflection: "Berdoa setiap pagi dan malam serta mengutamakan Tuhan dalam hidup.",
+                quiz: {
+                    q: "Sikap manakah yang mencerminkan pelaksanaan Perintah Pertama?",
+                    options: [
+                        { text: "Berdoa dan bersyukur kepada Allah sebelum dan sesudah kegiatan.", correct: true },
+                        { text: "Lebih mengutamakan bermain game hingga lupa waktu berdoa.", correct: false },
+                        { text: "Mempercayai ramalan nasib dan jimat keberuntungan.", correct: false }
+                    ]
+                }
+            },
+            {
+                id: 2,
+                roman: "II",
+                title: "Jangan menyebut nama TUHAN, Allahmu, dengan tidak semestinya.",
+                desc: "Perintah kedua mewajibkan kita untuk menghormati Nama Kudus Allah. Kita tidak boleh mengutuk, bersumpah palsu, atau menggunakan nama Tuhan dan hal-hal suci untuk main-main.",
+                reflection: "Menjaga lisan agar selalu mengucapkan perkataan yang sopan dan memberkati.",
+                quiz: {
+                    q: "Contoh tindakan yang MENJAGA kesucian Nama Tuhan adalah:",
+                    options: [
+                        { text: "Menggunakan nama Tuhan saat marah atau mengumpat.", correct: false },
+                        { text: "Mengucapkan nama Yesus dengan hormat dan penuh iman.", correct: true },
+                        { text: "Bersumpah bohong demi nama Tuhan agar dipercaya teman.", correct: false }
+                    ]
+                }
+            },
+            {
+                id: 3,
+                roman: "III",
+                title: "Kuduskanlah hari Tuhan.",
+                desc: "Perintah ketiga mengajak umat Katolik merayakan Hari Minggu (dan Hari Raya Wajib) dengan mengikuti Perayaan Ekaristi/Misa Kudus di Gereja dan beristirahat dari kesibukan kerja.",
+                reflection: "Mengikuti Misa Hari Minggu dengan khidmat dan sukacita.",
+                quiz: {
+                    q: "Bagaimana cara kita menguduskan Hari Tuhan pada hari Minggu?",
+                    options: [
+                        { text: "Tidur seharian penuh tanpa beribadah.", correct: false },
+                        { text: "Membantu orang tua bekerja keras seharian.", correct: false },
+                        { text: "Mengikuti Misa Kudus di Gereja dan berkumpul bersama keluarga.", correct: true }
+                    ]
+                }
+            },
+            {
+                id: 4,
+                roman: "IV",
+                title: "Hormatilah ibu bapamu.",
+                desc: "Perintah keempat memerintahkan kita untuk mengasihi, menghormati, dan mematuhi orang tua, guru, serta pemimpin masyarakat yang membimbing kita dalam kebaikan.",
+                reflection: "Mendengarkan nasehat orang tua dan membantu pekerjaan di rumah.",
+                quiz: {
+                    q: "Wujud rasa hormat anak kepada orang tua sesuai Perintah Ke-4 adalah:",
+                    options: [
+                        { text: "Membantu orang tua dengan tulus dan mendengarkan nasihat mereka.", correct: true },
+                        { text: "Membantah perkataan orang tua ketika dinasihati.", correct: false },
+                        { text: "Hanya menuruti orang tua jika diberi uang saku.", correct: false }
+                    ]
+                }
+            },
+            {
+                id: 5,
+                roman: "V",
+                title: "Jangan membunuh.",
+                desc: "Perintah kelima mengajarkan bahwa setiap kehidupan manusia adalah suci sejak dalam kandungan hingga meninggal secara alami. Kita harus menjauhi kekerasan, bullying, serta menjaga kesehatan.",
+                reflection: "Menghargai kehidupan diri sendiri dan sesama dengan tidak melakukan kekerasan.",
+                quiz: {
+                    q: "Tindakan yang SESUAI dengan Perintah Ke-5 'Jangan Membunuh' adalah:",
+                    options: [
+                        { text: "Mengejek dan membenci teman yang berbeda pendapat.", correct: false },
+                        { text: "Menjaga kesehatan tubuh dan merawat teman yang sedang sakit.", correct: true },
+                        { text: "Melakukan olahraga ekstrem yang membahayakan nyawa.", correct: false }
+                    ]
+                }
+            },
+            {
+                id: 6,
+                roman: "VI",
+                title: "Jangan berzinah.",
+                desc: "Perintah keenam memanggil kita untuk menjaga kemurnian tubuh, pikiran, dan tindakan. Dalam tradisi Katolik, tubuh kita adalah Bait Roh Kudus yang harus dihormati.",
+                reflection: "Menjaga kesopanan dalam berpakaian, bertutur kata, dan bersikap.",
+                quiz: {
+                    q: "Cara menjaga kemurnian diri sesuai ajaran Katolik adalah:",
+                    options: [
+                        { text: "Menonton video atau gambar yang tidak sopan.", correct: false },
+                        { text: "Bersikap dan berbahasa sopan serta menghormati kesucian tubuh.", correct: true },
+                        { text: "Mencampuri urusan keharmonisan keluarga orang lain.", correct: false }
+                    ]
+                }
+            },
+            {
+                id: 7,
+                roman: "VII",
+                title: "Jangan mencuri.",
+                desc: "Perintah ketujuh melarang mengambil milik orang lain tanpa izin, merusak fasilitas umum, atau berlaku curang. Perintah ini juga mengajak kita berbagi dengan kaum miskin.",
+                reflection: "Berlaku jujur dalam segala hal dan tidak mengambil barang yang bukan milik kita.",
+                quiz: {
+                    q: "Jika menemukan dompet jatuh di lingkungan sekolah, tindakan yang benar adalah:",
+                    options: [
+                        { text: "Mengambil uangnya lalu membuang dompetnya.", correct: false },
+                        { text: "Menyerahkannya kepada guru atau petugas sekolah agar dikembalikan.", correct: true },
+                        { text: "Menyimpannya secara diam-diam tanpa memberitahu siapapun.", correct: false }
+                    ]
+                }
+            },
+            {
+                id: 8,
+                roman: "VIII",
+                title: "Jangan bersaksi dusta tentang sesamamu.",
+                desc: "Perintah kedelapan mewajibkan kita untuk hidup dalam kebenaran dan kejujuran. Kita dilarang berbohong, menyebarkan gosip/hoaks, atau memfitnah teman.",
+                reflection: "Berani berkata jujur dan membela kebenaran dengan kasih.",
+                quiz: {
+                    q: "Contoh sikap yang melanggar Perintah Ke-8 adalah:",
+                    options: [
+                        { text: "Menyebarkan kabar bohong (hoaks) yang merusak nama baik teman.", correct: true },
+                        { text: "Mengaku jujur ketika melakukan kesalahan.", correct: false },
+                        { text: "Menjaga rahasia kebaikan teman.", correct: false }
+                    ]
+                }
+            },
+            {
+                id: 9,
+                roman: "IX",
+                title: "Jangan mengingini istri sesamamu.",
+                desc: "Perintah kesembilan mengingatkan kita untuk menjaga kesucian hati dan niat batin dari keharaman dan hasrat mementingkan diri sendiri yang merusak keharmonisan perkawinan sesama.",
+                reflection: "Mendoakan kebahagiaan dan keharmonisan keluarga sesama.",
+                quiz: {
+                    q: "Pesan utama dari Perintah Ke-9 adalah menjaga:",
+                    options: [
+                        { text: "Kesucian niat batin dan kehormatan keluarga sesama.", correct: true },
+                        { text: "Barang-barang antik di museum.", correct: false },
+                        { text: "Keinginan untuk memiliki semua barang di toko.", correct: false }
+                    ]
+                }
+            },
+            {
+                id: 10,
+                roman: "X",
+                title: "Jangan mengingini milik sesamamu secara tidak adil.",
+                desc: "Perintah kesepuluh melarang sifat iri hati dan keserakahan terhadap harta benda milik orang lain. Kita diajak bersyukur atas apa yang kita miliki dan tidak cemburu atas kelebihan teman.",
+                reflection: "Selalu mengucap syukur dan gembira melihat keberhasilan sesama.",
+                quiz: {
+                    q: "Sikap hati yang sesuai dengan Perintah Kesepuluh adalah:",
+                    options: [
+                        { text: "Iri hati saat teman mendapat mainan baru yang bagus.", correct: false },
+                        { text: "Selalu bersyukur atas apa yang dimiliki dan gembira atas sukses orang lain.", correct: true },
+                        { text: "Menuntut orang tua membelikan barang mahal secara paksa.", correct: false }
+                    ]
+                }
+            }
+        ];
+
+        /* SOUND MANAGER USING TONE.JS */
+        let soundEnabled = true;
+        let synth, bubbleSynth, hurtSynth, winSynth;
+
+        function initAudio() {
+            try {
+                if (window.Tone && !synth) {
+                    Tone.start();
+                    synth = new Tone.PolySynth(Tone.Synth).toDestination();
+                    synth.volume.value = -12;
+
+                    bubbleSynth = new Tone.MembraneSynth().toDestination();
+                    bubbleSynth.volume.value = -10;
+
+                    hurtSynth = new Tone.NoiseSynth({
+                        noise: { type: 'pink' },
+                        envelope: { attack: 0.01, decay: 0.2, sustain: 0 }
+                    }).toDestination();
+                    hurtSynth.volume.value = -10;
+
+                    winSynth = new Tone.PolySynth(Tone.Synth).toDestination();
+                    winSynth.volume.value = -8;
+                }
+            } catch(e) {
+                console.log("Audio init fallback:", e);
+            }
+        }
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            try {
+                if (!synth) initAudio();
+                const now = Tone.now();
+                if (type === 'swim') {
+                    bubbleSynth.triggerAttackRelease("C2", "16n", now, 0.3);
+                } else if (type === 'collect') {
+                    synth.triggerAttackRelease(["E5", "G5", "B5"], "16n", now);
+                } else if (type === 'tablet') {
+                    winSynth.triggerAttackRelease(["C5", "E5", "G5", "C6"], "8n", now);
+                } else if (type === 'hurt') {
+                    hurtSynth.triggerAttackRelease("16n", now);
+                } else if (type === 'correct') {
+                    winSynth.triggerAttackRelease(["G5", "C6"], "8n", now);
+                } else if (type === 'wrong') {
+                    synth.triggerAttackRelease(["C3", "C#3"], "8n", now);
+                }
+            } catch(e) {}
+        }
+
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            const icon = document.getElementById('audio-icon');
+            if (soundEnabled) {
+                icon.className = 'fa-solid fa-volume-high';
+            } else {
+                icon.className = 'fa-solid fa-volume-xmark text-red-400';
+            }
+        }
+
+        /* GAME STATE VARIABLES */
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let isGameRunning = false;
+        let isPaused = false;
+        let score = 0;
+        let hearts = 3;
+        let currentCommandmentIndex = 0; // 0 to 9
+        let collectedCommandments = new Set();
+
+        // Canvas Responsive Resize
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        // Dolphin Player Object
+        const dolphin = {
+            x: 100,
+            y: 200,
+            width: 70,
+            height: 35,
+            vx: 0,
+            vy: 0,
+            speed: 4.5,
+            angle: 0,
+            tailAngle: 0,
+            tailSpeed: 0.15,
+            isHit: false,
+            hitTimer: 0
+        };
+
+        // Key states
+        const keys = {
+            ArrowUp: false,
+            ArrowDown: false,
+            ArrowLeft: false,
+            ArrowRight: false,
+            w: false, s: false, a: false, d: false
+        };
+
+        // Obstacles & Collectibles Lists
+        let obstacles = [];
+        let collectibles = [];
+        let bubbles = [];
+        let lightRays = [];
+        let smallFishList = []; // Array for 2 types of decorative small ocean fish
+        let activeTablet = null;
+        let frameCount = 0;
+
+        // Keyboard Handlers
+        window.addEventListener('keydown', (e) => {
+            if (keys.hasOwnProperty(e.key)) {
+                keys[e.key] = true;
+            }
+        });
+
+        window.addEventListener('keyup', (e) => {
+            if (keys.hasOwnProperty(e.key)) {
+                keys[e.key] = false;
+            }
+        });
+
+        // Mobile D-Pad Handlers
+        const bindTouchBtn = (id, keyName) => {
+            const btn = document.getElementById(id);
+            if (!btn) return;
+            const start = (e) => { e.preventDefault(); keys[keyName] = true; initAudio(); };
+            const end = (e) => { e.preventDefault(); keys[keyName] = false; };
+            btn.addEventListener('touchstart', start);
+            btn.addEventListener('touchend', end);
+            btn.addEventListener('mousedown', start);
+            btn.addEventListener('mouseup', end);
+        };
+
+        bindTouchBtn('btn-up', 'ArrowUp');
+        bindTouchBtn('btn-down', 'ArrowDown');
+        bindTouchBtn('btn-left', 'ArrowLeft');
+        bindTouchBtn('btn-right', 'ArrowRight');
+
+        // Dash button
+        const dashBtn = document.getElementById('btn-dash');
+        dashBtn.addEventListener('touchstart', (e) => { e.preventDefault(); dolphin.speed = 8; });
+        dashBtn.addEventListener('touchend', (e) => { e.preventDefault(); dolphin.speed = 4.5; });
+        dashBtn.addEventListener('mousedown', () => { dolphin.speed = 8; });
+        dashBtn.addEventListener('mouseup', () => { dolphin.speed = 4.5; });
+
+        // Touch/Mouse Direct Swim Movement
+        let isTouchingCanvas = false;
+        let targetTouchPos = { x: 0, y: 0 };
+
+        canvas.addEventListener('touchstart', (e) => {
+            isTouchingCanvas = true;
+            const rect = canvas.getBoundingClientRect();
+            targetTouchPos.x = e.touches[0].clientX - rect.left;
+            targetTouchPos.y = e.touches[0].clientY - rect.top;
+            initAudio();
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            if (!isTouchingCanvas) return;
+            const rect = canvas.getBoundingClientRect();
+            targetTouchPos.x = e.touches[0].clientX - rect.left;
+            targetTouchPos.y = e.touches[0].clientY - rect.top;
+        });
+
+        canvas.addEventListener('touchend', () => {
+            isTouchingCanvas = false;
+        });
+
+        function initEnvironment() {
+            bubbles = [];
+            for (let i = 0; i < 35; i++) {
+                bubbles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    radius: Math.random() * 4 + 1.5,
+                    speed: Math.random() * 1.2 + 0.3,
+                    opacity: Math.random() * 0.5 + 0.2
+                });
+            }
+
+            lightRays = [];
+            for (let i = 0; i < 6; i++) {
+                lightRays.push({
+                    x: (i * (canvas.width / 5)) + Math.random() * 40,
+                    width: Math.random() * 60 + 40,
+                    opacity: Math.random() * 0.15 + 0.05
+                });
+            }
+
+            // Populate 2 Types of Small Fish
+            smallFishList = [];
+            for (let i = 0; i < 12; i++) {
+                smallFishList.push({
+                    type: i % 2 === 0 ? 'clownfish' : 'bluetang', // Type 1: Ikan Badut (Nemo), Type 2: Ikan Dori (Blue Tang)
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * (canvas.height - 120) + 60,
+                    speed: Math.random() * 1.2 + 0.8,
+                    size: Math.random() * 6 + 18,
+                    swimOffset: Math.random() * Math.PI * 2
+                });
+            }
+        }
+
+        function spawnEntities() {
+            // Spawn Tablet if none active and target tablet not reached
+            if (!activeTablet && currentCommandmentIndex < 10) {
+                // Spawn tablet further right in ocean
+                activeTablet = {
+                    x: canvas.width + 100,
+                    y: Math.random() * (canvas.height - 180) + 90,
+                    width: 50,
+                    height: 60,
+                    cmdIndex: currentCommandmentIndex,
+                    pulse: 0
+                };
+            }
+
+            // Spawn random obstacles (Hiu / Ubur-ubur / Sampah)
+            if (frameCount % 120 === 0 && obstacles.length < 5) {
+                const types = ['jellyfish', 'shark', 'plastic'];
+                const type = types[Math.floor(Math.random() * types.length)];
+                obstacles.push({
+                    type: type,
+                    x: canvas.width + 50,
+                    y: Math.random() * (canvas.height - 120) + 60,
+                    speed: type === 'shark' ? 3.5 : (type === 'jellyfish' ? 1.5 : 1.0),
+                    size: type === 'shark' ? 55 : (type === 'jellyfish' ? 35 : 30),
+                    sineOffset: Math.random() * Math.PI * 2
+                });
+            }
+
+            // Spawn collectibles (Pearls for health/score)
+            if (frameCount % 150 === 0 && collectibles.length < 4) {
+                collectibles.push({
+                    type: Math.random() > 0.3 ? 'pearl' : 'star',
+                    x: canvas.width + 40,
+                    y: Math.random() * (canvas.height - 120) + 60,
+                    size: 20,
+                    pulse: 0
+                });
+            }
+        }
+
+        function drawDolphin() {
+            ctx.save();
+            ctx.translate(dolphin.x, dolphin.y);
+            ctx.rotate(dolphin.angle);
+
+            // Flash red if hit
+            if (dolphin.isHit && Math.floor(Date.now() / 100) % 2 === 0) {
+                ctx.globalAlpha = 0.5;
+            }
+
+            // Tail Fluke animation
+            const tailWiggle = Math.sin(dolphin.tailAngle) * 8;
+
+            // Tail
+            ctx.beginPath();
+            ctx.fillStyle = '#0284c7';
+            ctx.moveTo(-25, 0);
+            ctx.quadraticCurveTo(-40, tailWiggle, -50, tailWiggle - 12);
+            ctx.quadraticCurveTo(-45, tailWiggle, -50, tailWiggle + 12);
+            ctx.quadraticCurveTo(-40, tailWiggle, -25, 0);
+            ctx.fill();
+
+            // Body
+            ctx.beginPath();
+            ctx.fillStyle = '#38bdf8';
+            ctx.ellipse(0, 0, 32, 16, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Belly (White/Cyan accent)
+            ctx.beginPath();
+            ctx.fillStyle = '#e0f2fe';
+            ctx.ellipse(4, 5, 22, 9, 0.1, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Snout / Beak
+            ctx.beginPath();
+            ctx.fillStyle = '#38bdf8';
+            ctx.moveTo(25, -4);
+            ctx.quadraticCurveTo(42, 2, 28, 8);
+            ctx.fill();
+
+            // Dorsal Fin
+            ctx.beginPath();
+            ctx.fillStyle = '#0284c7';
+            ctx.moveTo(-5, -14);
+            ctx.quadraticCurveTo(-15, -28, -25, -14);
+            ctx.fill();
+
+            // Pectoral Fin
+            ctx.beginPath();
+            ctx.fillStyle = '#0369a1';
+            ctx.moveTo(5, 4);
+            ctx.quadraticCurveTo(-2, 18, -10, 8);
+            ctx.fill();
+
+            // Eye
+            ctx.beginPath();
+            ctx.fillStyle = '#0f172a';
+            ctx.arc(20, -4, 3, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.fillStyle = '#ffffff';
+            ctx.arc(21, -5, 1, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Dolphin Blowhole detail
+            ctx.beginPath();
+            ctx.fillStyle = '#0369a1';
+            ctx.ellipse(0, -14, 3, 1, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+        }
+
+        function drawBackground() {
+            // Deep sea gradient
+            const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+            grad.addColorStop(0, '#0284c7');
+            grad.addColorStop(0.4, '#0369a1');
+            grad.addColorStop(0.8, '#0f172a');
+            grad.addColorStop(1, '#020617');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Sun Light Rays from surface
+            lightRays.forEach(ray => {
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(255, 255, 255, ${ray.opacity})`;
+                ctx.moveTo(ray.x, 0);
+                ctx.lineTo(ray.x + ray.width, 0);
+                ctx.lineTo(ray.x + ray.width + 120, canvas.height);
+                ctx.lineTo(ray.x - 40, canvas.height);
+                ctx.closePath();
+                ctx.fill();
+            });
+
+            // Sea Floor Coral Reefs & Seaweed
+            ctx.fillStyle = '#064e3b';
+            for (let x = 0; x < canvas.width; x += 40) {
+                const height = Math.sin(x * 0.05 + frameCount * 0.02) * 15 + 35;
+                ctx.beginPath();
+                ctx.moveTo(x, canvas.height);
+                ctx.quadraticCurveTo(x + 10, canvas.height - height, x + 20, canvas.height);
+                ctx.fill();
+            }
+
+            // Bubbles
+            bubbles.forEach(b => {
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(224, 242, 254, ${b.opacity})`;
+                ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                b.y -= b.speed;
+                if (b.y < -10) {
+                    b.y = canvas.height + 10;
+                    b.x = Math.random() * canvas.width;
+                }
+            });
+
+            // Draw Decorative 2 Types of Small Fish
+            smallFishList.forEach(fish => {
+                fish.swimOffset += 0.08;
+                fish.x -= fish.speed;
+                const waveY = Math.sin(fish.swimOffset) * 4;
+
+                if (fish.x < -30) {
+                    fish.x = canvas.width + 30;
+                    fish.y = Math.random() * (canvas.height - 120) + 60;
+                }
+
+                ctx.save();
+                ctx.translate(fish.x, fish.y + waveY);
+
+                if (fish.type === 'clownfish') {
+                    // Type 1: Clownfish / Ikan Badut (Orange & White Stripes)
+                    const s = fish.size;
+                    // Body
+                    ctx.fillStyle = '#ff6b00';
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, s, s * 0.55, 0, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Tail
+                    ctx.beginPath();
+                    ctx.moveTo(s * 0.8, 0);
+                    ctx.lineTo(s * 1.3, -s * 0.4);
+                    ctx.lineTo(s * 1.3, s * 0.4);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    // White Stripes
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(-s * 0.3, -s * 0.5, s * 0.3, s);
+                    ctx.fillRect(s * 0.2, -s * 0.4, s * 0.25, s * 0.8);
+
+                    // Eye
+                    ctx.fillStyle = '#000000';
+                    ctx.arc(-s * 0.5, -s * 0.15, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                } else {
+                    // Type 2: Blue Tang / Ikan Dori (Blue body, Yellow tail, Black pattern)
+                    const s = fish.size;
+                    // Tail (Yellow)
+                    ctx.fillStyle = '#facc15';
+                    ctx.beginPath();
+                    ctx.moveTo(s * 0.6, 0);
+                    ctx.lineTo(s * 1.3, -s * 0.5);
+                    ctx.lineTo(s * 1.3, s * 0.5);
+                    ctx.closePath();
+                    ctx.fill();
+
+                    // Body (Royal Blue)
+                    ctx.fillStyle = '#2563eb';
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, s, s * 0.6, 0, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Black Spine Accent
+                    ctx.fillStyle = '#0f172a';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, s * 0.4, 0, Math.PI);
+                    ctx.fill();
+
+                    // Eye
+                    ctx.fillStyle = '#000000';
+                    ctx.arc(-s * 0.5, -s * 0.15, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                ctx.restore();
+            });
+        }
+
+        function drawEntities() {
+            // Draw Obstacles
+            obstacles.forEach(obs => {
+                ctx.save();
+                if (obs.type === 'jellyfish') {
+                    // Pulsing Jellyfish
+                    obs.sineOffset += 0.05;
+                    const pulseY = Math.sin(obs.sineOffset) * 15;
+                    ctx.translate(obs.x, obs.y + pulseY);
+
+                    // Cap
+                    ctx.beginPath();
+                    ctx.fillStyle = 'rgba(244, 114, 182, 0.75)';
+                    ctx.arc(0, 0, obs.size / 2, Math.PI, 0);
+                    ctx.fill();
+
+                    // Tentacles
+                    ctx.strokeStyle = 'rgba(251, 207, 232, 0.8)';
+                    ctx.lineWidth = 2;
+                    for (let i = -12; i <= 12; i += 6) {
+                        ctx.beginPath();
+                        ctx.moveTo(i, 0);
+                        ctx.quadraticCurveTo(i + Math.sin(obs.sineOffset * 2) * 6, 20, i, 30);
+                        ctx.stroke();
+                    }
+                } else if (obs.type === 'shark') {
+                    // Shark
+                    ctx.translate(obs.x, obs.y);
+                    ctx.fillStyle = '#475569';
+                    // Body
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, obs.size, obs.size / 2.5, 0, 0, Math.PI * 2);
+                    ctx.fill();
+                    // Tail
+                    ctx.beginPath();
+                    ctx.moveTo(obs.size - 5, 0);
+                    ctx.lineTo(obs.size + 20, -18);
+                    ctx.lineTo(obs.size + 20, 18);
+                    ctx.closePath();
+                    ctx.fill();
+                    // Shark Fin
+                    ctx.beginPath();
+                    ctx.moveTo(0, -12);
+                    ctx.lineTo(-10, -32);
+                    ctx.lineTo(10, -12);
+                    ctx.fill();
+                    // Eye & teeth
+                    ctx.fillStyle = '#ef4444';
+                    ctx.arc(-obs.size / 2, -4, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                } else if (obs.type === 'plastic') {
+                    // Ocean Plastic Bottle / Trash
+                    ctx.translate(obs.x, obs.y);
+                    ctx.fillStyle = 'rgba(203, 213, 225, 0.7)';
+                    ctx.rotate(0.3);
+                    ctx.fillRect(-12, -18, 24, 36);
+                    ctx.fillStyle = '#2563eb';
+                    ctx.fillRect(-8, -22, 16, 6);
+                }
+                ctx.restore();
+            });
+
+            // Draw Collectibles
+            collectibles.forEach(col => {
+                ctx.save();
+                ctx.translate(col.x, col.y);
+                col.pulse += 0.05;
+                const scale = 1 + Math.sin(col.pulse) * 0.1;
+                ctx.scale(scale, scale);
+
+                if (col.type === 'pearl') {
+                    // Glowing Pearl
+                    ctx.shadowColor = '#38bdf8';
+                    ctx.shadowBlur = 12;
+                    ctx.beginPath();
+                    ctx.fillStyle = '#ffffff';
+                    ctx.arc(0, 0, col.size / 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.strokeStyle = '#bae6fd';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                } else {
+                    // Sea Star
+                    ctx.shadowColor = '#facc15';
+                    ctx.shadowBlur = 10;
+                    ctx.fillStyle = '#facc15';
+                    ctx.beginPath();
+                    for (let i = 0; i < 5; i++) {
+                        ctx.lineTo(Math.cos((18 + i * 72) * Math.PI / 180) * col.size, -Math.sin((18 + i * 72) * Math.PI / 180) * col.size);
+                        ctx.lineTo(Math.cos((54 + i * 72) * Math.PI / 180) * (col.size / 2), -Math.sin((54 + i * 72) * Math.PI / 180) * (col.size / 2));
+                    }
+                    ctx.closePath();
+                    ctx.fill();
+                }
+                ctx.restore();
+            });
+
+            // Draw Golden Commandment Tablet (Loh Batu Perintah Allah)
+            if (activeTablet) {
+                ctx.save();
+                ctx.translate(activeTablet.x, activeTablet.y);
+                activeTablet.pulse += 0.04;
+                const floatY = Math.sin(activeTablet.pulse) * 8;
+                ctx.translate(0, floatY);
+
+                // Golden Aura Glow
+                ctx.shadowColor = '#f59e0b';
+                ctx.shadowBlur = 25;
+
+                // Tablet Stone shape
+                ctx.fillStyle = 'url(#stoneGrad)';
+                const stoneGrad = ctx.createLinearGradient(-25, -30, 25, 30);
+                stoneGrad.addColorStop(0, '#fef08a');
+                stoneGrad.addColorStop(0.5, '#f59e0b');
+                stoneGrad.addColorStop(1, '#b45309');
+                ctx.fillStyle = stoneGrad;
+
+                // Two rounded arches shape (Decalogue tablet)
+                ctx.beginPath();
+                ctx.roundRect(-25, -30, 50, 60, [15, 15, 6, 6]);
+                ctx.fill();
+                ctx.strokeStyle = '#fffbeb';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // Roman Numeral Text
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = '#451a03';
+                ctx.font = 'bold 20px Fredoka, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                const romanStr = CATHOLIC_COMMANDMENTS[activeTablet.cmdIndex].roman;
+                ctx.fillText(romanStr, 0, 0);
+
+                // Cross Icon Header on Tablet
+                ctx.font = '10px FontAwesome';
+                ctx.fillText('✝', 0, -18);
+
+                ctx.restore();
+            }
+        }
+
+        function updatePhysics() {
+            if (isPaused) return;
+
+            frameCount++;
+            dolphin.tailAngle += dolphin.tailSpeed;
+
+            // Velocity movement based on keys
+            let dx = 0;
+            let dy = 0;
+
+            if (keys.ArrowUp || keys.w) dy -= 1;
+            if (keys.ArrowDown || keys.s) dy += 1;
+            if (keys.ArrowLeft || keys.a) dx -= 1;
+            if (keys.ArrowRight || keys.d) dx += 1;
+
+            // Handle touch canvas direct swim
+            if (isTouchingCanvas) {
+                const touchDx = targetTouchPos.x - dolphin.x;
+                const touchDy = targetTouchPos.y - dolphin.y;
+                const dist = Math.hypot(touchDx, touchDy);
+                if (dist > 15) {
+                    dx = touchDx / dist;
+                    dy = touchDy / dist;
+                }
+            }
+
+            // Apply movement & rotation
+            if (dx !== 0 || dy !== 0) {
+                const targetAngle = Math.atan2(dy, dx);
+                dolphin.angle += (targetAngle - dolphin.angle) * 0.15;
+                dolphin.x += Math.cos(dolphin.angle) * dolphin.speed;
+                dolphin.y += Math.sin(dolphin.angle) * dolphin.speed;
+
+                if (frameCount % 20 === 0) playSound('swim');
+            } else {
+                dolphin.angle *= 0.95; // Return to horizontal
+            }
+
+            // Keep Dolphin inside Canvas bounds
+            dolphin.x = Math.max(40, Math.min(canvas.width - 40, dolphin.x));
+            dolphin.y = Math.max(40, Math.min(canvas.height - 50, dolphin.y));
+
+            // Hit Cooldown Timer
+            if (dolphin.isHit) {
+                dolphin.hitTimer--;
+                if (dolphin.hitTimer <= 0) dolphin.isHit = false;
+            }
+
+            // Scroll environment & entities left
+            const worldScrollSpeed = 1.8;
+
+            // Move Active Tablet closer
+            if (activeTablet) {
+                activeTablet.x -= worldScrollSpeed * 0.8;
+                // Keep tablet inside right viewport if player hasn't reached it
+                if (activeTablet.x < canvas.width - 120) {
+                    activeTablet.x = canvas.width - 120;
+                }
+
+                // Check Dolphin collision with Golden Tablet
+                const distToTablet = Math.hypot(dolphin.x - activeTablet.x, dolphin.y - activeTablet.y);
+                if (distToTablet < 50) {
+                    triggerCommandmentModal(activeTablet.cmdIndex);
+                    activeTablet = null;
+                }
+            }
+
+            // Move & Check Obstacles
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obs = obstacles[i];
+                obs.x -= obs.speed + worldScrollSpeed;
+
+                // Collision check with Dolphin
+                const dist = Math.hypot(dolphin.x - obs.x, dolphin.y - obs.y);
+                if (dist < (obs.size / 2 + 20) && !dolphin.isHit) {
+                    dolphin.isHit = true;
+                    dolphin.hitTimer = 60; // 1 sec invulnerability
+                    hearts--;
+                    updateHeartsHUD();
+                    playSound('hurt');
+
+                    if (hearts <= 0) {
+                        gameOver();
+                    }
+                }
+
+                if (obs.x < -60) obstacles.splice(i, 1);
+            }
+
+            // Move & Check Collectibles
+            for (let i = collectibles.length - 1; i >= 0; i--) {
+                const col = collectibles[i];
+                col.x -= worldScrollSpeed;
+
+                const dist = Math.hypot(dolphin.x - col.x, dolphin.y - col.y);
+                if (dist < 30) {
+                    playSound('collect');
+                    if (col.type === 'pearl') {
+                        score += 50;
+                        if (hearts < 3) {
+                            hearts++;
+                            updateHeartsHUD();
+                        }
+                    } else {
+                        score += 100;
+                    }
+                    updateScoreHUD();
+                    collectibles.splice(i, 1);
+                    continue;
+                }
+
+                if (col.x < -40) collectibles.splice(i, 1);
+            }
+
+            spawnEntities();
+        }
+
+        function updateHeartsHUD() {
+            const container = document.getElementById('hearts-container');
+            container.innerHTML = '';
+            for (let i = 0; i < 3; i++) {
+                if (i < hearts) {
+                    container.innerHTML += '<i class="fa-solid fa-heart text-red-500 text-lg"></i>';
+                } else {
+                    container.innerHTML += '<i class="fa-regular fa-heart text-slate-600 text-lg"></i>';
+                }
+            }
+        }
+
+        function updateScoreHUD() {
+            document.getElementById('score-val').innerText = score;
+            document.getElementById('commandment-count').innerText = `${collectedCommandments.size}/10`;
+        }
+
+        function updateBadgesHUD() {
+            for (let i = 1; i <= 10; i++) {
+                const badge = document.getElementById(`badge-${i}`);
+                if (collectedCommandments.has(i)) {
+                    badge.className = 'cmd-badge flex-1 min-w-[28px] text-center py-0.5 rounded bg-gradient-to-r from-amber-400 to-yellow-500 text-slate-950 font-bold border border-yellow-200 shadow-md';
+                } else if (i === currentCommandmentIndex + 1) {
+                    badge.className = 'cmd-badge flex-1 min-w-[28px] text-center py-0.5 rounded bg-cyan-700 text-amber-300 font-bold border border-amber-400 animate-pulse';
+                }
+            }
+
+            const questText = document.getElementById('quest-text');
+            if (currentCommandmentIndex < 10) {
+                questText.innerHTML = `Bantu Lumba-Lumba menemukan <b>Loh Batu Perintah ke-${currentCommandmentIndex + 1}</b>!`;
+            } else {
+                questText.innerHTML = `Semua 10 Perintah Allah telah ditemukan!`;
+            }
+        }
+
+        function triggerCommandmentModal(index) {
+            isPaused = true;
+            playSound('tablet');
+            const data = CATHOLIC_COMMANDMENTS[index];
+
+            document.getElementById('modal-cmd-number-badge').innerText = `Perintah Ke-${data.id} (${data.roman})`;
+            document.getElementById('modal-cmd-text').innerText = `"${data.title}"`;
+            document.getElementById('modal-cmd-desc').innerHTML = `<b>Makna:</b> ${data.desc}`;
+            document.getElementById('modal-cmd-reflection').innerText = `Refleksi: ${data.reflection}`;
+            document.getElementById('modal-quiz-q').innerText = data.quiz.q;
+
+            // Generate quiz options
+            const optionsContainer = document.getElementById('quiz-options-container');
+            optionsContainer.innerHTML = '';
+
+            const continueBtn = document.getElementById('btn-continue-cmd');
+            continueBtn.disabled = true;
+            continueBtn.className = "opacity-50 cursor-not-allowed bg-slate-700 text-slate-400 font-fredoka px-6 py-2.5 rounded-full text-sm font-bold shadow-lg transition";
+
+            document.getElementById('quiz-feedback').innerText = '';
+
+            data.quiz.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3 rounded-xl bg-slate-800/90 hover:bg-slate-700 border border-cyan-500/30 text-xs md:text-sm text-cyan-100 transition flex items-center justify-between";
+                btn.innerHTML = `<span>${opt.text}</span> <i class="fa-regular fa-circle text-slate-500"></i>`;
+                btn.onclick = () => selectQuizOption(btn, opt.correct, index);
+                optionsContainer.appendChild(btn);
+            });
+
+            const modal = document.getElementById('modal-cmd');
+            modal.classList.remove('hidden');
+        }
+
+        function selectQuizOption(selectedBtn, isCorrect, cmdIndex) {
+            const options = document.querySelectorAll('#quiz-options-container button');
+            options.forEach(b => {
+                b.disabled = true;
+                b.classList.add('opacity-70');
+            });
+
+            const feedback = document.getElementById('quiz-feedback');
+            const continueBtn = document.getElementById('btn-continue-cmd');
+
+            if (isCorrect) {
+                playSound('correct');
+                selectedBtn.className = "w-full text-left p-3 rounded-xl bg-emerald-900/80 border-2 border-emerald-400 text-xs md:text-sm text-emerald-200 transition flex items-center justify-between font-semibold";
+                selectedBtn.querySelector('i').className = "fa-solid fa-circle-check text-emerald-400 text-lg";
+                feedback.innerHTML = `<span class="text-emerald-400"><i class="fa-solid fa-check mr-1"></i> Benar sekali! (+200 Poin)</span>`;
+                
+                score += 200;
+                updateScoreHUD();
+
+                // Unlock
+                collectedCommandments.add(cmdIndex + 1);
+                currentCommandmentIndex = Math.max(currentCommandmentIndex, cmdIndex + 1);
+                updateBadgesHUD();
+
+                continueBtn.disabled = false;
+                continueBtn.className = "bg-gradient-to-r from-amber-400 to-yellow-500 hover:from-yellow-300 hover:to-amber-400 text-slate-950 font-fredoka px-6 py-2.5 rounded-full text-sm font-bold shadow-lg transition cursor-pointer transform hover:scale-105";
+            } else {
+                playSound('wrong');
+                selectedBtn.className = "w-full text-left p-3 rounded-xl bg-rose-950/80 border-2 border-rose-500 text-xs md:text-sm text-rose-200 transition flex items-center justify-between";
+                selectedBtn.querySelector('i').className = "fa-solid fa-circle-xmark text-rose-400 text-lg";
+                feedback.innerHTML = `<span class="text-rose-400"><i class="fa-solid fa-xmark mr-1"></i> Kurang tepat, mari coba lagi.</span>`;
+
+                // Re-enable options after short delay
+                setTimeout(() => {
+                    options.forEach(b => {
+                        b.disabled = false;
+                        b.classList.remove('opacity-70');
+                    });
+                }, 1200);
+            }
+        }
+
+        function closeCmdModal() {
+            document.getElementById('modal-cmd').classList.add('hidden');
+            isPaused = false;
+
+            // Check Victory
+            if (currentCommandmentIndex >= 10) {
+                triggerVictory();
+            }
+        }
+
+        function toggleJournal() {
+            const journalModal = document.getElementById('modal-journal');
+            const isHidden = journalModal.classList.contains('hidden');
+
+            if (isHidden) {
+                renderJournalItems();
+                journalModal.classList.remove('hidden');
+            } else {
+                journalModal.classList.add('hidden');
+            }
+        }
+
+        function renderJournalItems() {
+            const listContainer = document.getElementById('journal-list');
+            listContainer.innerHTML = '';
+
+            CATHOLIC_COMMANDMENTS.forEach((cmd) => {
+                const isUnlocked = collectedCommandments.has(cmd.id);
+                const card = document.createElement('div');
+                card.className = `p-4 rounded-2xl border ${isUnlocked ? 'bg-slate-900/90 border-amber-400/50' : 'bg-slate-950/60 border-slate-800 opacity-60'} transition`;
+
+                card.innerHTML = `
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 rounded-lg ${isUnlocked ? 'bg-amber-400 text-slate-950' : 'bg-slate-800 text-slate-500'} font-fredoka font-bold flex items-center justify-center text-sm shrink-0 mt-0.5">
+                            ${cmd.roman}
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-fredoka text-sm md:text-base ${isUnlocked ? 'text-amber-300' : 'text-slate-400'} font-bold mb-1">
+                                Perintah Ke-${cmd.id}: ${cmd.title}
+                            </h4>
+                            <p class="text-xs text-cyan-100/90 leading-relaxed mb-2">
+                                ${cmd.desc}
+                            </p>
+                            <div class="text-xs text-amber-200/80 italic bg-cyan-950/50 p-2 rounded-lg border border-cyan-800/40">
+                                <i class="fa-solid fa-heart mr-1 text-red-400"></i> <b>Penerapan:</b> ${cmd.reflection}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
+        }
+
+        function triggerVictory() {
+            isPaused = true;
+            document.getElementById('victory-score').innerText = score;
+            document.getElementById('modal-victory').classList.remove('hidden');
+            playSound('tablet');
+        }
+
+        function generateCertificate() {
+            const inputName = document.getElementById('student-name-input').value.trim();
+            const studentName = inputName ? inputName : "Siswa Katolik Budi Pekerti";
+            
+            document.getElementById('cert-student-name').innerText = studentName;
+            document.getElementById('cert-score-val').innerText = score;
+
+            // Determine grade predicate
+            let grade = "Sangat Memuaskan (A)";
+            if (score >= 2500) {
+                grade = "Istimewa (A+)";
+            } else if (score < 1500) {
+                grade = "Baik (B)";
+            }
+            document.getElementById('cert-grade-val').innerText = grade;
+
+            // Format current date
+            const today = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('cert-date').innerText = today.toLocaleDateString('id-ID', options);
+
+            document.getElementById('modal-certificate').classList.remove('hidden');
+        }
+
+        function closeCertificate() {
+            document.getElementById('modal-certificate').classList.add('hidden');
+        }
+
+        function gameOver() {
+            isPaused = true;
+            document.getElementById('modal-gameover').classList.remove('hidden');
+        }
+
+        function startGame() {
+            initAudio();
+            document.getElementById('start-overlay').classList.add('hidden');
+            restartGame();
+        }
+
+        function restartGame() {
+            score = 0;
+            hearts = 3;
+            currentCommandmentIndex = 0;
+            collectedCommandments.clear();
+            obstacles = [];
+            collectibles = [];
+            activeTablet = null;
+            
+            dolphin.x = 100;
+            dolphin.y = canvas.height / 2;
+            dolphin.vx = 0;
+            dolphin.vy = 0;
+            dolphin.isHit = false;
+
+            updateHeartsHUD();
+            updateScoreHUD();
+            updateBadgesHUD();
+
+            document.getElementById('modal-gameover').classList.add('hidden');
+            document.getElementById('modal-victory').classList.add('hidden');
+            document.getElementById('modal-cmd').classList.add('hidden');
+
+            isPaused = false;
+            isGameRunning = true;
+        }
+
+        // Main Animation Loop
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            drawBackground();
+            if (isGameRunning) {
+                updatePhysics();
+                drawEntities();
+                drawDolphin();
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        window.onload = function() {
+            resizeCanvas();
+            initEnvironment();
+            gameLoop();
+        };
+    </script>
+</body>
+</html>
